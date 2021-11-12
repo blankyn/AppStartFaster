@@ -1,5 +1,6 @@
 package com.blankm.launcher.test;
 
+import android.app.Application;
 import android.util.Log;
 
 
@@ -11,6 +12,10 @@ import java.util.concurrent.Executor;
 import me.blankm.launcher.task.AppStartTask;
 
 public class TestAppStartTaskFive extends AppStartTask {
+
+    public TestAppStartTaskFive(Application application) {
+        super(application);
+    }
 
     @Override
     public void run() {

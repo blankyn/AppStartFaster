@@ -1,5 +1,6 @@
 package com.blankm.launcher.test;
 
+import android.app.Application;
 import android.util.Log;
 
 
@@ -14,6 +15,9 @@ import me.blankm.launcher.task.AppStartTask;
 public class TestAppStartTaskTwo extends AppStartTask {
 
 
+    public TestAppStartTaskTwo(Application application) {
+        super(application);
+    }
 
     @Override
     public void run() {

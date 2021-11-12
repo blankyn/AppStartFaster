@@ -22,11 +22,11 @@ public class MyApplication extends Application {
                 .setContext(this)
                 .setShowLog(true)
                 .setAllTaskWaitTimeOut(1000)
-                .addAppStartTask(new TestAppStartTaskTwo())
-                .addAppStartTask(new TestAppStartTaskFour())
-                .addAppStartTask(new TestAppStartTaskFive())
-                .addAppStartTask(new TestAppStartTaskThree())
-                .addAppStartTask(new TestAppStartTaskOne())
+                .addAppStartTask(new TestAppStartTaskTwo(this))
+                .addAppStartTask(new TestAppStartTaskFour(this))
+                .addAppStartTask(new TestAppStartTaskFive(this))
+                .addAppStartTask(new TestAppStartTaskThree(this))
+                .addAppStartTask(new TestAppStartTaskOne(this))
                 .start()
                 .await();
         }

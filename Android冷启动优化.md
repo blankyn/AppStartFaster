@@ -49,27 +49,27 @@ MultiDex.install 耗时：1385
 ### 为什么MultiDex这么耗时！老规矩，上源码！
 此处省略N行代码...，直接上图！
 
-<img src="DemoImage/营帐管理系统-系统配置-流程图 (1).png">
+<img src="image/营帐管理系统-系统配置-流程图 (1).png">
 简单概括一下，就是：
 
-<img src="DemoImage/mudtdex.png">
+<img src="image/mudtdex.png">
 
 **这里插点别的东西，其实热更新的原理也基本类似，比如Tinker，只不过Tinker把补丁包中的dex添加到了数组的最前面，而不是后面，为啥这样做，下面简单分析一下ClassLoader的原理**
 
 不管是 PathClassLoader还是DexClassLoader，都继承自BaseDexClassLoader，加载类的代码在BaseDexClassLoader中，所以简单概括一下这个流程
 
-<img src="DemoImage/ClassLoader原理.png">**由上可知，类加载的过程本质上就是数组的遍历过程，所以，为何Tinker会把补丁dex加在数组的最前面就非常好理解了，因为补丁包中的dex不需要把原apk中的dex进行替换，费力又不讨好，还影响原包结构，加在最前面，findlass找到补丁包中的类就不会再往下遍历了，直接就起到了不是替换而形似替换的作用。**
+<img src="image/ClassLoader原理.png">**由上可知，类加载的过程本质上就是数组的遍历过程，所以，为何Tinker会把补丁dex加在数组的最前面就非常好理解了，因为补丁包中的dex不需要把原apk中的dex进行替换，费力又不讨好，还影响原包结构，加在最前面，findlass找到补丁包中的类就不会再往下遍历了，直接就起到了不是替换而形似替换的作用。**
 
 ### 总结
 **结合MultDex和ClassLoader的加载原理，我们再稍微细化一下两者结合的过程，如下**
 
-<img src="DemoImage/mudtdex.png">
+<img src="image/mudtdex.png">
 
 **经过前文中的流程图，不难发现，MultDex Hook的点其实就在DexPathList的dexElements数组上，而dex插入的关键方法是把dex文件转换成Element对象，也就是图中的DexPathList.makeDexElements()方法，为何着重提这个，咱们下面在优化部分再深入了解这个问题！**
 
 ## 2.2、Application中初始化应用所需的业务、工具、UI等组件，导致耗时
 ### 冷启动流程
-<img src="DemoImage/冷启动流程.png">
+<img src="image/冷启动流程.png">
 
 **不难看出，ContentProvider的onCreate()是在Application的onCreate()之前调用的，这也就导致市面上出现了很多声明了自动初始化的库，对着这种东西，个人看法很简单，除了确实需要自动初始化且真的提高了开发效率，耗时还较短的东西，别的库用这点雕虫小技就是当纯的炫技，多此一举。**
 ### Application的onCreate()方法
@@ -79,7 +79,7 @@ MultiDex.install 耗时：1385
 ### MultDex优化第一式（掩耳盗铃，偷换概念）
 **多进程MultDex加载大法！原理如下：**
 
-<img src="DemoImage/多进程MultDex加载.png">
+<img src="image/多进程MultDex加载.png">
 
 为何说这是掩耳盗铃、偷换概念呢，因为冷启动的概念是从应用创建进程到显示第一个Activity为结束，所以我们的方案看似第一个Activity秒开展示，但是真正的耗时问题并没有解决，不急！下面有更好的解决方案！
 ### MultDex优化第二式（正解）
@@ -168,23 +168,22 @@ private void initAnalyzeAync() {
 ```
 2. 找到systrace.py所在目录（sdk/platform-tools/systrace/）
 
-  <img src="DemoImage/systrace.png">
+  <img src="image/systrace.png">
 
 3. 执行python命令（需安装python环境）：
 ```
 python systrace.py-t 10 -a <package_name> -o xxtrace.html sched gfx view wm am app
 ```
-![systrace运行.png](https://note.youdao.com/yws/res/906/WEBRESOURCEac32f42f6a9b1125401e00a5dbd1f768)
 
-<img src="DemoImage/systrace.png">
+<img src="image/systrace.png">
 
 4. 运行App，等待html文件生成：
 
-  <img src="DemoImage/systrace运行.png">
+  <img src="image/systrace运行.png">
 
 5. 打开html文件，查看耗时==cpu Duration==为消耗cpu的时间，==wall Duration==为总时间
 
-<img src="DemoImage/systrace测试.png">
+<img src="image/systrace测试.png">
 
 6. 可以看到，==cpu Duration==几乎占了全部的==wall Duration==，所以这个任务为cpu消耗型任务，所以我们优化的时候要把这个任务放在==定容线程池==中
 
@@ -202,7 +201,7 @@ python systrace.py-t 10 -a <package_name> -o xxtrace.html sched gfx view wm am a
 
 - 重复以上两个步骤
 
-  <img src="DemoImage/有向无环图.png">
+  <img src="image/有向无环图.png">
 
 ### 任务执行等待问题
 **我们实际开发中，经常会遇到这种场景，splashActivity的启动必须依赖于某个库初始化完成才行，直白一点来说就是在application中阻塞执行这个任务，基于我们的多线程并发任务调度，最简便的方法就是任务管理器使用==CountDownLatch==，在任务开始执行时调用countDownLatch.await()，在我们构造图结构时，把需要在application中阻塞执行的任务标记好，然后每执行完一个任务countDownLatch.countDown()，直到所有阻塞任务都执行完毕后，阻塞结束**

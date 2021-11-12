@@ -13,6 +13,8 @@ import me.blankm.launcher.task.AppStartTask;
 
 public class TestAppStartTaskTwo extends AppStartTask {
 
+
+
     @Override
     public void run() {
         long start = System.currentTimeMillis();

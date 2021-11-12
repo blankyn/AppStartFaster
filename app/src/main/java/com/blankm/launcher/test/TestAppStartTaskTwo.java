@@ -2,12 +2,14 @@ package com.blankm.launcher.test;
 
 import android.util.Log;
 
-import com.wxy.appstartfaster.executor.TaskExceutorManager;
-import com.wxy.appstartfaster.task.AppStartTask;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+
+import me.blankm.launcher.executor.TaskExceutorManager;
+import me.blankm.launcher.task.AppStartTask;
 
 public class TestAppStartTaskTwo extends AppStartTask {
 

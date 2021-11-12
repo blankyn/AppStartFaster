@@ -9,7 +9,8 @@ import com.blankm.launcher.test.TestAppStartTaskFour;
 import com.blankm.launcher.test.TestAppStartTaskOne;
 import com.blankm.launcher.test.TestAppStartTaskThree;
 import com.blankm.launcher.test.TestAppStartTaskTwo;
-import com.wxy.appstartfaster.dispatcher.AppStartTaskDispatcher;
+
+import me.blankm.launcher.dispatcher.AppStartTaskDispatcher;
 
 
 public class MyApplication extends Application {

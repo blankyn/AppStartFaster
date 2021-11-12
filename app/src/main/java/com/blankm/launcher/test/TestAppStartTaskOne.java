@@ -3,9 +3,10 @@ package com.blankm.launcher.test;
 import android.util.Log;
 
 
-import com.wxy.appstartfaster.task.AppStartTask;
 
 import java.util.List;
+
+import me.blankm.launcher.task.AppStartTask;
 
 public class TestAppStartTaskOne extends AppStartTask {
 

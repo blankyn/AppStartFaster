@@ -47,7 +47,7 @@ afterEvaluate {
                 from components.release
 
                 // You can then customize attributes of the publication as shown below.
-                groupId = 'me.blankm.progressmanager'
+                groupId = 'me.blankm.applauncherlib'
                 artifactId = 'base'
                 version = '1.0.0'
             }

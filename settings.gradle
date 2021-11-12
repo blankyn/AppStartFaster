@@ -1,0 +1,2 @@
+include ':app', ':applauncherlib'
+rootProject.name='AppStartFaster'
